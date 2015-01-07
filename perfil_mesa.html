@@ -21,10 +21,13 @@
   <div class="menu">
     <div class="container">
       <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
+       <a class="btn btn-danger add pull-left back"><</a>
+    </div>
+    <div class="col-md-4 text-center">
        <h3 class="title-mesa ped_titulo"></h3>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
       <a href="cardapio.html" class="btn btn-success add pull-right">+</a>
     </div>
     </div>
@@ -46,13 +49,33 @@
 
     <script type="text/javascript">
     $(function(){
-      var array = [{nome: 'Coca Cola', qtd: 2}, {nome: 'Pizza 4 queijos', qtd: 3}];
-              array.forEach(function(item){
-            var itens = "<a href='#' class='list-group-item'><h4>Item: "+item.nome+"  |  Quantidade: "+item.qtd+"</h4></a>";
+      var getUrl = location.search.split('=');
+      var codPedido;
+      var nomeMesa
+
+      if(getUrl.length > 1){
+          codPedido = getUrl[1].split('&')[0];
+          nomeMesa = getUrl[2];
+      }else{
+          codPedido = "";
+          nomeMesa = "";
+      }
+      var url = "http://172.16.0.6/SISTEMAS/fabio/interno/admin/API/pedido/perfil_mesa.php";
+      $.ajax({
+        type: "GET",
+        url: url,
+        data: {codigo: codPedido},
+        success: success
+      });
+      function success(result){
+        array = JSON.parse(result);
+        array.forEach(function(item){
+            var itens = "<a href='#' class='list-group-item'><h4>"+item.descricao+"  |  Quantidade: "+item.quantidade+"</h4></a>";
             $('.list-group').append(itens);
         });
-        var mesa = 'Mesa 1'+' Itens';
-        $('.ped_titulo').text(mesa);      
+      }
+      
+      $('.ped_titulo').text("Mesa " + nomeMesa);      
     });
     </script>
   </body>

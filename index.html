@@ -44,13 +44,34 @@
 
     <script type="text/javascript">
     $(function(){
-      var array = [{nome: 'mesa 1', cod: 12321}, {nome: 'mesa 2', cod: 12321}, {nome: 'mesa 3', cod: 12321}];
-        array.forEach(function(item){
-            var itens = "<div class='col-md-3'>";
-                itens += "<a href='pedido.html?cod_mesa="+item.cod+"' class='btn btn-info btn-mesa'>"+item.nome+"</a>"
+      var url = "http://172.16.0.6/SISTEMAS/fabio/interno/admin/API/pedido/listar_mesas.php";
+      console.log(url);
+      $.ajax({
+        type: "GET",
+        url: url,
+        success: success,
+        error: error
+      });
+
+      function success(result){
+        array = JSON.parse(result);
+        if(array.length == 0){
+          var itens = "<div class='alert alert-danger' role='alert'>";
+          itens += "<a href='#' class='alert-link '>Não há mesas ocupadas</a>";
+          itens += "</div>";
+          $('.mesas').append(itens);
+        }else{
+             array.forEach(function(item){
+            var itens = "<div class='col-md-2 col-xs-4'>";
+                itens += "<a href='perfil_mesa.html?cod_mesa="+item.codigo+"&nome="+item.nmesa+"' class='btn btn-info btn-mesa'>Mesa "+item.nmesa+"</a>"
                 itens += "</div>";
             $('.mesas').append(itens);
-        });
+            }); 
+        }
+      }
+      function error(result, status){
+        console.log(status); 
+      }        
     });
     </script>
   </body>
