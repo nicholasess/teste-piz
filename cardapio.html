@@ -22,8 +22,15 @@
       background-color: #c0392b;
       color: white;
     }
-    .subcat{
+    .subcat, .codsub{
       display: none;
+    }
+    .subcat li{
+      background-color: #3f3f3e;
+      color: white;
+    }
+    a:hover{
+      text-decoration: none;
     }
     </style>
     <script src="js/fastclick.js"></script>
@@ -54,34 +61,47 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.js"></script>
+    <script src="js/lodash.js"></script>
+    <script src="js/main.js"></script>
+    
 
     <script type="text/javascript">
     $(function(){
-      var array = [{nome: '1 - Pizza', subcat: [{nome: 'Grande'}, {nome: 'Medio'}, {nome: 'Pequeno'}]}, 
-                {nome: '2 - Bebidas', subcat: []}, {nome: '3 - Beirutes', subcat: []}];
-                var itens = "";
-              array.forEach(function(item){
-                 itens += "<li class='list-group-item'><h3>"+item.nome+"</h3></li>";
-                if(item.subcat.length > 0){
-                  var subcat = item.subcat;
-                  itens += "<div class='list-group subcat'>";
-                  subcat.forEach(function(item2){
-                      itens += "<li class='list-group-item'><h4>"+item2.nome+"</h4></li>";  
-                  });
-                  itens += "</div>";
-                }
-            itens += "</li>";
-            
-        });
-        $('.list-group').append(itens);      
-        var mesa = 'Mesa 1 - Cardapio';
-        $('.ped_titulo').text(mesa);      
 
-        $('.list-group-item').on('click', function(e){
-          e.preventDefault();
-          $('')
-        });
+      var url = "http://172.16.0.6/SISTEMAS/fabio/interno/admin/API/pedido/listar_categorias.php";
+
+      $.ajax({
+        type: "GET",
+        url: url,
+        success: success
+      });
+
+      function success(result){
+        array = JSON.parse(result);
+        
+        var itens = "";
+        var categoria = array.categoria;
+        var subcategoria = array.subcategoria;
+       
+          categoria.forEach(function(item){
+            var subcat = _.filter(subcategoria, {categoria: item.codigo});
+             if(subcat.length > 0){
+              itens += "<li class='list-group-item abrirMenu' id='"+item.codigo+"'><h3>"+item.descricao+"</h3></li>";
+              itens += "<div class='list-group subcat' id='s"+item.codigo+"'>";  
+              subcat.forEach(function(item2){
+                   itens += "<a href='produto.html?cod_prod="+item.codigo+"&cod_subprod="+item2.codigo+"&opc=1'><li class='list-group-item'><p class='codsub'>"+item2.codigoSub+"</p><h4>"+item2.descricao+"</h4></li></a>";
+              });
+              itens += "</div>";
+            }else{
+                 itens += "<a href='produto.html?cod_prod="+item.codigo+"&cod_subprod=1&opc=0' class='list-group-item'><h3>"+item.descricao+"</h3></a>";
+            }              
+          });          
+          $('.list-group').append(itens);      
+        }
+      $('.list-group').on('click','.list-group-item',function(){
+          var id = $(this).attr('id');
+          $('#s'+id).toggle();
+       });
     });
     </script>
   </body>

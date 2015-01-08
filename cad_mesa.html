@@ -48,24 +48,30 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.js"></script>
+    <script src="js/main.js"></script>
     <script type="text/javascript">
     $(function(){
-      var mesas = [{nome: 'Mesa 1'},{nome: 'Mesa 2'}, {nome: 'Mesa 3'}];
-
-      mesas.forEach(function(item, key){
-        if(key == 0){
-          $('#mesa').append("<option value='"+item.nome+"' selected>"+item.nome+"</option>");
-        }else{
-          $('#mesa').append("<option value='"+item.nome+"'>"+item.nome+"</option>");  
-        }        
+      var url = "http://172.16.0.6/SISTEMAS/fabio/interno/admin/API/pedido/mesas_livres.php";
+      $.ajax({
+        type: "GET",
+        url: url,
+        success: success
       });
+      
+      
 
-      var mesaSelec = $( "#myselect option:selected" ).text();  
-      console.log(mesaSelec);
-      $('#mesa').on('change', function(){
-          mesaSelec = $( "#myselect option:selected" ).text();
-          console.log(mesaSelec);
+      function success(result){
+         mesas = JSON.parse(result);
+         mesas.forEach(function(item, key){
+          $('#mesa').append("<option value='"+item+"'>Mesa "+item+"</option>");  
+        });
+        localStorage.setItem('mesa', parseInt($('#mesa').val()));
+        console.log(parseInt($('#mesa').val()));
+      }
+
+      $('#mesa').change(function(e){
+        localStorage.setItem('mesa', parseInt($('#mesa').val()));
+        console.log(parseInt($('#mesa').val()));
       });
     });
     </script>

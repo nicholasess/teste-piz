@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>App Cardapio</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script src="js/fastclick.js"></script>
+    <style type="text/css">
+      #lista{
+        background-color: #3f3f3e;
+        width: 100%;
+        padding: 10px;
+        display: none;
+      }
+      #lista li{
+        list-style: none;
+        color: white;
+        height: 50px;
+        line-height: 40px;
+        margin-top: 10px;
+        border-bottom: 1px solid white;
+      }
+      #lista li:first-child{
+        margin-top: 0;
+      }
+      #lista li:last-child{
+        border-bottom: none; 
+      }
+      
+    </style>
+  </head>
+
+  <body>
+  <div class="menu">
+    <div class="container">
+      <div class="row">
+    <div class="col-md-4">
+       <a class="btn btn-danger add pull-left back"><</a>
+    </div>
+    <div class="col-md-4 text-center">
+       <h3 class="title-mesa">Produtos</h3>
+    </div>
+    </div>
+  </div>
+  </div>
+  <div class="container hack">    
+  <div class="row">
+  <div class="col-md-12">
+    <label>Digite o nome do produto</label>
+    <input class="form-control input-lg" id="produto" type="text" autofocus>
+    <div id="lista"></div>
+    <br />
+    <label>Lista de Produtos</label>
+    <div class="list-group">
+      
+    </div>
+    <br />
+    <label>Quantidade</label>
+    <input class="form-control input-lg" id="qtd" type="number" value="1" autofocus>
+    <br />
+    <label>Obs:</label>
+    <textarea class="form-control" id="obs"></textarea> 
+    <br />
+    <button class="btn btn-success btn-block btn-lg" id="btn">Cadastrar</button>
+  </div>  
+  </div>
+  </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.js"></script>
+    <script src="js/lodash.js"></script>
+    <script src="js/main.js"></script>
+    <script type="text/javascript">
+    $(function(){
+      var getUrl = location.search.split('=');
+      var item = getUrl[1].split('&');
+      var categoria = getItemUrl(getUrl[1]);
+      var subcategoria = getItemUrl(getUrl[2]);
+      var opc = getUrl[3];
+      
+      var url = "http://172.16.0.6/SISTEMAS/fabio/interno/admin/API/pedido/";
+
+      $('#produto').keyup(function(){
+        var produto = $(this).val();
+        if(produto.length > 0){
+          $('#lista').css('display', 'block');
+        }else{
+          $('#lista').css('display', 'none');
+        }
+      
+        $.ajax({
+          type: "GET",
+          url: url+"busca_produto.php",
+          data: {categoria: categoria, campo: produto},
+          success: success
+        });
+
+      });
+
+      function success(result){
+        result = JSON.parse(result);
+        $('#lista').empty();
+        var itens="";
+        result.forEach(function(item){
+          itens +="<li id='"+item.codigo+"&"+item.descricao+"'>"+item.descricao+"<p></p></li>";
+        });
+        $('#lista').append(itens);
+      }
+
+
+      var produtos = [];
+
+      $('#lista').on('click', 'li', function(){
+        $('#produto').val("");
+        $('#lista').css('display', 'none');
+        var nomeP = $(this).attr('id').split('&');
+        addArray(produtos, {
+                cod: nomeP[0]
+        });        
+
+        $('.list-group').append("<li class='list-group-item'>"+nomeP[1]+"</li>")
+      });
+
+      $('#btn').click(function(){
+        var obs = $('#obs').val(),
+            qtd = $('#qtd').val();
+
+        var data = {
+          obs: obs,
+          quantidade: qtd,
+          preco: subcategoria,
+          o: opc,
+          codigo: localStorage.getItem('mesa') || {},
+          mesa: localStorage.getItem('mesa'),
+          array: produtos
+        }
+        console.log(data);
+        $.ajax({
+          type: "GET",
+          url: url+"adicionar_produto.php",
+          data: data,
+          success: function(result){
+            result = JSON.parse(result);
+              location.replace('perfil_mesa.html?cod_mesa='+result+'&mesa='+localStorage.getItem('mesa'));
+          },
+          error: function(item){
+            console.log('error', item);
+          }
+        });
+
+      });
+
+      function addArray(array, obj){
+        if(array.length == 0){
+          array[0] = obj;
+        }else{
+          array.push(obj);
+        }
+        return array;
+      }
+
+      function getItemUrl(obj){
+        return obj.split('&')[0];
+      }
+    });
+    </script>
+  </body>
+</html>

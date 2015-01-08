@@ -28,7 +28,7 @@
        <h3 class="title-mesa ped_titulo"></h3>
     </div>
     <div class="col-md-4">
-      <a href="cardapio.html" class="btn btn-success add pull-right">+</a>
+      <a href="cardapio.html" class="btn btn-warning add pull-right">+</a>
     </div>
     </div>
   </div>
@@ -45,7 +45,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.js"></script>
+    <script src="js/main.js"></script>
 
     <script type="text/javascript">
     $(function(){
@@ -56,6 +56,8 @@
       if(getUrl.length > 1){
           codPedido = getUrl[1].split('&')[0];
           nomeMesa = getUrl[2];
+          localStorage.setItem('pedido', codPedido);
+          localStorage.setItem('mesa', nomeMesa);
       }else{
           codPedido = "";
           nomeMesa = "";
@@ -69,10 +71,17 @@
       });
       function success(result){
         array = JSON.parse(result);
-        array.forEach(function(item){
-            var itens = "<a href='#' class='list-group-item'><h4>"+item.descricao+"  |  Quantidade: "+item.quantidade+"</h4></a>";
-            $('.list-group').append(itens);
-        });
+        if(array.length == 0){
+            var itens = "<div class='alert alert-danger' role='alert'>";
+          itens += "<a href='#' class='alert-link '>Não há produtos inseridos</a>";
+          itens += "</div>";
+          $('.list-group').append(itens);
+        }else{
+            array.forEach(function(item){
+              var itens = "<a href='#' class='list-group-item'><h4>"+item.descricao+"  |  Quantidade: "+item.quantidade+"</h4></a>";
+              $('.list-group').append(itens);
+            });
+        }
       }
       
       $('.ped_titulo').text("Mesa " + nomeMesa);      
