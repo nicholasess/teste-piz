@@ -32,6 +32,7 @@
     a:hover{
       text-decoration: none;
     }
+
     </style>
     <script src="js/fastclick.js"></script>
   </head>
@@ -41,11 +42,20 @@
     <div class="container">
       <div class="row">
     <div class="col-md-4">
-       <a class="btn btn-danger add pull-left back"><</a>
+       <a href="perfil_mesa.html" class="btn btn-danger add pull-left back"><</a>
     </div>  
     <div class="col-md-4">
        <h3 class="title-mesa">Cardapio</h3>
     </div>
+    </div>
+  </div>
+  </div>
+  <div class="menu menu2">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+           <h4 id="mesa_desc"></h4>
+        </div>  
     </div>
   </div>
   </div>
@@ -63,8 +73,6 @@
     <script src="js/jquery.js"></script>
     <script src="js/lodash.js"></script>
     <script src="js/main.js"></script>
-    
-
     <script type="text/javascript">
     $(function(){
 
@@ -75,7 +83,7 @@
         url: url,
         success: success
       });
-
+      
       function success(result){
         array = JSON.parse(result);
         
@@ -89,11 +97,11 @@
               itens += "<li class='list-group-item abrirMenu' id='"+item.codigo+"'><h3>"+item.descricao+"</h3></li>";
               itens += "<div class='list-group subcat' id='s"+item.codigo+"'>";  
               subcat.forEach(function(item2){
-                   itens += "<a href='produto.html?cod_prod="+item.codigo+"&cod_subprod="+item2.codigo+"&opc=1'><li class='list-group-item'><p class='codsub'>"+item2.codigoSub+"</p><h4>"+item2.descricao+"</h4></li></a>";
+                   itens += "<a href='produto.html?cod_prod="+item.codigo+"&cod_subprod="+item2.codigo+"&opc=1&cardapio="+item.descricao+"'><li class='list-group-item'><p class='codsub'>"+item2.codigoSub+"</p><h4>"+item2.descricao+"</h4></li></a>";
               });
               itens += "</div>";
             }else{
-                 itens += "<a href='produto.html?cod_prod="+item.codigo+"&cod_subprod=1&opc=0' class='list-group-item'><h3>"+item.descricao+"</h3></a>";
+                 itens += "<a href='produto.html?cod_prod="+item.codigo+"&cod_subprod=1&opc=0&cardapio="+item.descricao+"' class='list-group-item'><h3>"+item.descricao+"</h3></a>";
             }              
           });          
           $('.list-group').append(itens);      

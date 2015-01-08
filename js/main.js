@@ -1,6 +1,3 @@
 $(function(){
-	$('.back').click(function(event){
-		 event.preventDefault();
-    	 history.back(1);
-	});
+	$('#mesa_desc').text("Mesa "+localStorage.getItem('mesa'));
 });

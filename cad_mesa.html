@@ -22,7 +22,7 @@
     <div class="container">
       <div class="row">
     <div class="col-md-4">
-       <a class="btn btn-danger add pull-left back"><</a>
+       <a href="index.html" class="btn btn-danger add pull-left back"><</a>
     </div>  
     <div class="col-md-4">
       <h3 class="title-mesa">Novo Pedido</h3>
@@ -38,7 +38,7 @@
     </div>
     <br />
     <div class="col-md-6">
-      <a href="perfil_mesa.html" class="btn btn-success btn-lg btn-block">Cadastrar</a>
+      <a href="perfil_mesa.html?" class="btn btn-success btn-lg btn-block">Cadastrar</a>
     </div>
   </div>
   </div>
@@ -66,10 +66,14 @@
           $('#mesa').append("<option value='"+item+"'>Mesa "+item+"</option>");  
         });
         localStorage.setItem('mesa', parseInt($('#mesa').val()));
+        localStorage.removeItem('pedido');
+        console.log(localStorage.getItem('pedido'));        
         console.log(parseInt($('#mesa').val()));
       }
 
       $('#mesa').change(function(e){
+        localStorage.removeItem('pedido');
+        console.log(localStorage.getItem('pedido'));
         localStorage.setItem('mesa', parseInt($('#mesa').val()));
         console.log(parseInt($('#mesa').val()));
       });

@@ -35,7 +35,15 @@
       #lista li:last-child{
         border-bottom: none; 
       }
-      
+      #excluir{
+        display: none;
+      }
+      #qtd{
+        text-align: center;
+      }
+      .valor{
+        margin-top: -50px;
+      }
     </style>
   </head>
 
@@ -44,11 +52,20 @@
     <div class="container">
       <div class="row">
     <div class="col-md-4">
-       <a class="btn btn-danger add pull-left back"><</a>
+       <a href="perfil_mesa.html" class="btn btn-danger add pull-left back"><</a>
     </div>
     <div class="col-md-4 text-center">
-       <h3 class="title-mesa">Produtos</h3>
+       <h3 class="title-mesa"></h3>
     </div>
+    </div>
+  </div>
+  </div>
+    <div class="menu menu2">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+           <h4 id="mesa_desc"></h4>
+        </div>  
     </div>
   </div>
   </div>
@@ -63,6 +80,7 @@
     <div class="list-group">
       
     </div>
+    <button class="btn btn-danger btn-block btn-lg" id="excluir">Excluir</button>
     <br />
     <label>Quantidade</label>
     <input class="form-control input-lg" id="qtd" type="number" value="1" autofocus>
@@ -70,7 +88,7 @@
     <label>Obs:</label>
     <textarea class="form-control" id="obs"></textarea> 
     <br />
-    <button class="btn btn-success btn-block btn-lg" id="btn">Cadastrar</button>
+    <button class="btn btn-success btn-block btn-lg" id="btn" disabled="">Cadastrar</button>
   </div>  
   </div>
   </div>
@@ -88,9 +106,13 @@
       var item = getUrl[1].split('&');
       var categoria = getItemUrl(getUrl[1]);
       var subcategoria = getItemUrl(getUrl[2]);
-      var opc = getUrl[3];
-      
+      subcategoria = parseInt(subcategoria);
+      var opc = getItemUrl(getUrl[3]);
+      var nomeC = getUrl[4];
       var url = "http://172.16.0.6/SISTEMAS/fabio/interno/admin/API/pedido/";
+
+
+      $('.title-mesa').text(nomeC);
 
       $('#produto').keyup(function(){
         var produto = $(this).val();
@@ -114,23 +136,63 @@
         $('#lista').empty();
         var itens="";
         result.forEach(function(item){
-          itens +="<li id='"+item.codigo+"&"+item.descricao+"'>"+item.descricao+"<p></p></li>";
+          var preco = getPreco(item);
+          itens +="<li id='"+item.codigo+"&"+item.descricao+"'><p>"+item.descricao+"</p><p class='pull-right valor'>R$ "+preco+"</p></li>";
         });
         $('#lista').append(itens);
       }
 
+      function getPreco(item){
+          var preco;
+          console.log(subcategoria);
+          switch(subcategoria){
+              case 1: preco = item.preco;
+              break;
+              case 2: preco = item.preco2;
+              break;
+              case 3: preco = item.preco3;
+              break;
+          }
 
-      var produtos = [];
+          return preco;
+      }
+
+      var produtos = [], codArray = [];
 
       $('#lista').on('click', 'li', function(){
         $('#produto').val("");
+        $("#btn").removeAttr("disabled"); 
+        $('#excluir').css('display', 'block');
         $('#lista').css('display', 'none');
         var nomeP = $(this).attr('id').split('&');
-        addArray(produtos, {
-                cod: nomeP[0]
-        });        
+        var status = false;
+        
+        if(codArray.length > 0){
 
-        $('.list-group').append("<li class='list-group-item'>"+nomeP[1]+"</li>")
+          var index = codArray.indexOf(nomeP[0]);
+          if(index == -1 || index < 0){
+              produtos = addArray(produtos, {cod: nomeP[0], nome: nomeP[1]});
+              codArray = addArray(codArray, nomeP[0]);        
+          }
+        }else{
+            produtos = addArray(produtos, {cod: nomeP[0], nome: nomeP[1]});
+            codArray = addArray(codArray, nomeP[0]);
+        }
+        $('.list-group').empty();
+        produtos.forEach(function(item){
+            $('.list-group').append("<li class='list-group-item' id='"+item.cod+"'>"+item.nome+"</li>")
+        });        
+      });
+
+      $('.list-group').on('on',, function(){
+
+      })
+
+      $('#excluir').click(function(){
+        produtos = [], codArray = [];
+        $('.list-group').empty();
+        $("#btn").attr("disabled", "disabled");
+        $('#excluir').css('display', 'none');
       });
 
       $('#btn').click(function(){
@@ -142,7 +204,7 @@
           quantidade: qtd,
           preco: subcategoria,
           o: opc,
-          codigo: localStorage.getItem('mesa') || {},
+          codigo: localStorage.getItem('pedido') || {},
           mesa: localStorage.getItem('mesa'),
           array: produtos
         }
@@ -152,8 +214,10 @@
           url: url+"adicionar_produto.php",
           data: data,
           success: function(result){
+            localStorage.removeItem('pedido');
             result = JSON.parse(result);
-              location.replace('perfil_mesa.html?cod_mesa='+result+'&mesa='+localStorage.getItem('mesa'));
+            localStorage.setItem('pedido', result);
+            location.replace('perfil_mesa.html?cod_mesa='+result+'&mesa='+localStorage.getItem('mesa'));
           },
           error: function(item){
             console.log('error', item);

@@ -30,7 +30,8 @@
     </div>
   </div>
   </div>
-  <div class="container hack">    
+  <br />
+  <div class="container">        
   <div class="row mesas">
   </div>
   </div>
@@ -61,9 +62,12 @@
           itens += "</div>";
           $('.mesas').append(itens);
         }else{
+              var total = 0;
              array.forEach(function(item){
-            var itens = "<div class='col-md-2 col-xs-4'>";
-                itens += "<a href='perfil_mesa.html?cod_mesa="+item.codigo+"&nome="+item.nmesa+"' class='btn btn-info btn-mesa'>Mesa "+item.nmesa+"</a>"
+              var mesa = (item.nmesa < 10) ? ('0'+item.nmesa) : item.nmesa; 
+              console.log(mesa);
+              var itens = "<div class='col-md-2 col-xs-4'>";
+                itens += "<a href='perfil_mesa.html?cod_mesa="+item.codigo+"&nome="+mesa+"' class='btn btn-info btn-mesa'>Mesa "+mesa+"</a>"
                 itens += "</div>";
             $('.mesas').append(itens);
             }); 

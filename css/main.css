@@ -34,3 +34,16 @@
     .back{
       margin-right: 40px;
     }
+
+    .menu2{
+      padding: 10px;
+      min-height: 0;
+      background-color: #bdc3c7;
+    }
+    #mesa_desc{
+      color: white;
+    }
+
+    .content{
+      height: 200px;
+    }
