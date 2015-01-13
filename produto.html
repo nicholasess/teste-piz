@@ -98,7 +98,9 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery.js"></script>
+    <script src="js/vibe-lib.js"></script>
     <script src="js/lodash.js"></script>
+    <script src="js/account.js"></script>
     <script src="js/main.js"></script>
     <script type="text/javascript">
     $(function(){
@@ -109,34 +111,32 @@
       subcategoria = parseInt(subcategoria);
       var opc = getItemUrl(getUrl[3]);
       var nomeC = getUrl[4];
-      var url = "http://172.16.0.6/SISTEMAS/fabio/interno/admin/API/pedido/";
+      
 
 
       $('.title-mesa').text(nomeC);
 
       $('#produto').keyup(function(){
         var produto = $(this).val();
-        if(produto.length > 0){
-          $('#lista').css('display', 'block');
-        }else{
+      if(produto.length > 0){
+         $('#lista').css('display', 'block');
+      }else{
           $('#lista').css('display', 'none');
-        }
+      }
       
-        $.ajax({
-          type: "GET",
-          url: url+"busca_produto.php",
-          data: {categoria: categoria, campo: produto},
-          success: success
-        });
-
+      var url = urlServer+"busca_produto.php";  
+      AjaxGet(url, {categoria: categoria, campo: produto}, Result);        
+      
       });
 
-      function success(result){
+      function Result(err, result){
         result = JSON.parse(result);
         $('#lista').empty();
         var itens="";
         result.forEach(function(item){
           var preco = getPreco(item);
+          preco = parseFloat(preco);
+          preco = accounting.formatMoney(preco, "", 2, ".", ",");
           itens +="<li id='"+item.codigo+"&"+item.descricao+"'><p>"+item.descricao+"</p><p class='pull-right valor'>R$ "+preco+"</p></li>";
         });
         $('#lista').append(itens);
@@ -144,7 +144,6 @@
 
       function getPreco(item){
           var preco;
-          console.log(subcategoria);
           switch(subcategoria){
               case 1: preco = item.preco;
               break;
@@ -206,32 +205,21 @@
           mesa: localStorage.getItem('mesa'),
           array: produtos
         }
-        console.log(data);
         $.ajax({
           type: "GET",
-          url: url+"adicionar_produto.php",
+          url: urlServer+"adicionar_produto.php",
           data: data,
           success: function(result){
             localStorage.removeItem('pedido');
             result = JSON.parse(result);
             localStorage.setItem('pedido', result);
             location.replace('perfil_mesa.html?cod_mesa='+result+'&mesa='+localStorage.getItem('mesa'));
-          },
-          error: function(item){
-            console.log('error', item);
           }
         });
 
       });
 
-      function addArray(array, obj){
-        if(array.length == 0){
-          array[0] = obj;
-        }else{
-          array.push(obj);
-        }
-        return array;
-      }
+      
 
       function getItemUrl(obj){
         return obj.split('&')[0];

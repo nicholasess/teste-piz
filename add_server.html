@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>App Cardapio</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+
+    <script src="js/fastclick.js"></script>
+  </head>
+
+  <body>
+  <div class="menu">
+    <div class="container">
+      <div class="row">
+      <div class="col-md-4">
+       <a href="home.html" class="btn btn-danger add pull-left back">?</a>
+      </div> 
+    <div class="col-md-6">
+      <h3 class="title-mesa">Adicionar Servidor</h3>
+    </div>
+     </div>
+  </div>
+  </div>
+  <br />
+  <div class="container">        
+  <div class="row">
+  <div id="msg"></div>
+  </div>
+  <div class="row">
+  <div class="col-md-12">
+    <label>ADICIONE O IP</label>
+    <input type="text" id="ip" class="form-control input-lg">
+  </div>
+  </div>
+  <br />
+  <div class="row">
+  <div class="col-md-12">
+    <button class="btn btn-success btn-block btn-lg" id="btn">Atualizar</button>
+  </div>
+  </div>
+  </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.js"></script>
+    <script src="js/vibe-lib.js"></script>
+    <script type="text/javascript">
+    $(function(){
+      var aux = location.search;
+      if(aux != ""){
+        console.log("sem parametro", aux);
+      }else{
+        console.log("com parametro", aux);
+      }
+      $('#ip').val(localStorage.getItem('ip'));
+      $('#btn').click(function(e){
+        
+        e.preventDefault();
+        var valor = $('#ip').val();
+        console.log(valor);
+        localStorage.setItem('ip', valor);
+        location.replace("home.html");
+      })
+    });
+    </script>
+  </body>
+</html>

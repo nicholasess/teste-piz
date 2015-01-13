@@ -46,34 +46,16 @@
       float: left;
       margin-bottom: 10px;
     }
-    #footer{
-      position:fixed;
-      min-height:50px;
-      text-align: center;
-      color: white;
-      background-color:#2c3e50;
-      bottom:0px;
-      left:0px;
-      right:0px;
-      margin-bottom:0px;
-    }
-    .btn-footer{
-      margin-top: 20px;
-      padding: 10px;
-     }
+    
     
     .hack{
       float: left;
     }
-    .display-none{
-      display: none;
-    }
+
     .list-group{
       width: 100%;
     }
-    #total{
-      line-height: 30px;
-    }
+    
     
     @media screen and (min-width: 768px) {
       .status{
@@ -127,7 +109,9 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery.js"></script>
+    <script src="js/vibe-lib.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/account.js"></script>
 
     <script type="text/javascript">
     $(function(){
@@ -145,7 +129,7 @@
           codPedido = localStorage.getItem('pedido');
           nomeMesa = localStorage.getItem('mesa');
       }
-      var url = "http://172.16.0.6/SISTEMAS/fabio/interno/admin/API/pedido/perfil_mesa.php";
+      var url = urlServer+"perfil_mesa.php";
       $.ajax({
         type: "GET",
         url: url,
@@ -164,6 +148,8 @@
             
             array.forEach(function(item){
               total += parseFloat(item.total);
+              item.valor = accounting.formatMoney(item.valor, "", 2, ".", ",");
+              item.total = accounting.formatMoney(item.total, "", 2, ".", ",");
               var itens = "<div class='list-group-item'>";
                   itens += "<div class='col-md-6'>";
                   itens += "<p class='nome'>"+item.quantidade+" - "+item.descricao+" </p>";
@@ -178,22 +164,21 @@
               $('.list-group').append(itens);
             });
         }
-        $('#total').click(function(){
-            if($('#imp').hasClass('display-none')){
-              $('#imp').removeClass('display-none')
-            }else{
-              $('#imp').addClass('display-none')
-            } 
-
-            if($('#pag').hasClass('display-none')){
-              $('#pag').removeClass('display-none')
-            }else{
-              $('#pag').addClass('display-none')
-            }
-              
-          });
+        $('#imp').click(function(e){
+            e.preventDefault();
+            var url = urlServer+"imprimir.php";
+            AjaxGet(url, {codigo: codPedido}, function(err, result){
+              if(result){
+                alert('Impresso com Sucesso!');
+              }
+            });            
+        })
+        total = accounting.formatMoney(total, "", 2, ".", ",");
         $('#total').text("Total: R$ "+total);
+        
+        localStorage.setItem('total', total.toString().replace(',','.'));
       }
+
       
       $('.ped_titulo').text("Mesa " + nomeMesa);      
     });

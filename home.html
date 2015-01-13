@@ -13,14 +13,21 @@
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/main.css">
-
     <script src="js/fastclick.js"></script>
+    <style type="text/css">
+    .title-mesa{
+      margin-left: -20px;
+    }
+    </style>
   </head>
 
   <body>
   <div class="menu">
     <div class="container">
       <div class="row">
+      <div class="col-md-4">
+       <a href="add_server.html" class="btn btn-danger add pull-left back">?</a>
+      </div> 
     <div class="col-md-6">
       <h3 class="title-mesa">Mesas Ocupadas</h3>
     </div>
@@ -36,46 +43,42 @@
   </div>
   </div>
 
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery.js"></script>
+    <script src="js/vibe-lib.js"></script>
     <script src="js/main.js"></script>
 
     <script type="text/javascript">
     $(function(){
-      var url = "http://172.16.0.6/SISTEMAS/fabio/interno/admin/API/pedido/listar_mesas.php";
-      console.log(url);
-      $.ajax({
-        type: "GET",
-        url: url,
-        success: success,
-        error: error
-      });
-
-      function success(result){
-        array = JSON.parse(result);
+      function start(){
+        var url = urlServer+"listar_mesas.php";
+        AjaxGet(url,null,Return);
+      }
+        
+      function Return(err, result){
+        $('.mesas').empty();
+        
+        if(err){
+          
+        }
+        
+        array = JSON.parse(result);    
+        
         if(array.length == 0){
-          var itens = "<div class='alert alert-danger' role='alert'>";
-          itens += "<a href='#' class='alert-link '>Não há mesas ocupadas</a>";
-          itens += "</div>";
+          var itens = msgAlert("Não há mesas ocupadas");
           $('.mesas').append(itens);
         }else{
               var total = 0;
              array.forEach(function(item){
               var mesa = (item.nmesa < 10) ? ('0'+item.nmesa) : item.nmesa; 
-              console.log(mesa);
               var itens = "<div class='col-md-2 col-xs-4'>";
                 itens += "<a href='perfil_mesa.html?cod_mesa="+item.codigo+"&nome="+mesa+"' class='btn btn-info btn-mesa'>Mesa "+mesa+"</a>"
                 itens += "</div>";
-            $('.mesas').append(itens);
+                $('.mesas').append(itens);
             }); 
         }
-      }
-      function error(result, status){
-        console.log(status); 
-      }        
+        setTimeout(start, 2000);
+     }
+      start();      
     });
     </script>
   </body>

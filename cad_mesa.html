@@ -51,7 +51,8 @@
     <script src="js/main.js"></script>
     <script type="text/javascript">
     $(function(){
-      var url = "http://172.16.0.6/SISTEMAS/fabio/interno/admin/API/pedido/mesas_livres.php";
+
+      var url = urlServer+"mesas_livres.php";
       $.ajax({
         type: "GET",
         url: url,
