@@ -57,12 +57,6 @@
     <script src="js/vibe-lib.js"></script>
     <script type="text/javascript">
     $(function(){
-      var aux = location.search;
-      if(aux != ""){
-        console.log("sem parametro", aux);
-      }else{
-        console.log("com parametro", aux);
-      }
       $('#ip').val(localStorage.getItem('ip'));
       $('#btn').click(function(e){
         

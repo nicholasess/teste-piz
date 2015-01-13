@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="br.com.nicholasess.pizzariafabio" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-<name>Pizzaria Fabio</name>
+<name>App Pedido</name>
 <description></description>
 <author email="nicholasess@gmail.com" href="http://www.nicholasess.com.br">
-Apache Cordova Team
+Fabio Pizzaria
 </author>
 <content src="index.html" />
 <access origin="*" />
