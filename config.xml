@@ -1,10 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="br.com.nicholasess.apppedido" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-<name>App Pedido</name>
+<widget id="br.com.nicholasess.appbaixa" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<preference name="phonegap-version" value="3.6.3" />
+        <preference name="android-minSdkVersion" value="10" />
+        <preference name="android-targetSdkVersion" value="12" />
+        <name>App Pedido</name>
 <description></description>
-<author email="nicholasess@gmail.com" href="http://www.nicholasess.com.br">
+<author email="matheysricardo@gmail.com" href="http://www.matheysricardo.com.br">
 Fabio Pizzaria
 </author>
+<icon src="img/logo.png" />
 <content src="index.html" />
 <access origin="*" />
 </widget>
